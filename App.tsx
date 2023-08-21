@@ -1,115 +1,64 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  KeyboardAvoidingView,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  TextInput,
-  useColorScheme,
-  View,
-} from 'react-native';
-
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-import KeyboardPaddingView from './KeyboardPaddingView';
-
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
-
-function App(): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={[backgroundStyle, {flex: 1}]}>
-      <View
-        contentInsetAdjustmentBehavior="automatic"
-        style={[backgroundStyle, {flex: 1}]}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes" />
-          <Section title="See Your Changes" />
-          <Section title="See Your Changes" />
-
-          <TextInput style={{borderWidth: 1, width: 300, height: 50}} />
-        </View>
-      </View>
-
-      <View style={{borderWidth: 1, width: '100%', height: 50}} />
-      {/* <KeyboardPaddingView headerShown={false} /> */}
-    </SafeAreaView>
-  );
-}
+import {StatusBar, StyleSheet, Text, TextInput, View} from 'react-native';
+import React, {FC, ReactNode} from 'react';
+import {useResizeMode} from 'react-native-keyboard-controller';
+import KeyboardAwareScrollView from './KeyboardAwareScrollView';
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  centered: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  container: {
+    flex: 1,
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
+  header: {
+    backgroundColor: 'lightblue',
+    height: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  highlight: {
-    fontWeight: '700',
+  contentContainer: {
+    backgroundColor: 'white',
+    flexGrow: 1,
+  },
+  flex1: {flex: 1},
+  textInput: {
+    width: '100%',
+    height: 50,
+    marginTop: 50,
+    backgroundColor: 'lightgray',
   },
 });
 
-export default App;
+const Centered: FC<{children: ReactNode}> = ({children}) => (
+  <View style={styles.centered}>{children}</View>
+);
+
+export default function AwareScrollView() {
+  useResizeMode();
+
+  // header background style works together follow some states/ changing image background or background color
+
+  return (
+    <View style={styles.flex1}>
+      <StatusBar barStyle={'dark-content'} backgroundColor={'transparent'} />
+
+      <View style={styles.header}>
+        <Text>{'Screen header'}</Text>
+        <Text>{'Screen header'}</Text>
+        <Text>{'Screen header'}</Text>
+      </View>
+
+      <KeyboardAwareScrollView
+        contentContainerStyle={styles.contentContainer}
+        style={styles.container}>
+        <Centered>
+          {new Array(5).fill(0).map((_, i) => (
+            <TextInput key={i} value={i + '_'} style={[styles.textInput]} />
+          ))}
+        </Centered>
+      </KeyboardAwareScrollView>
+    </View>
+  );
+}
